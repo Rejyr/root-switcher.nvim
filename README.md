@@ -21,6 +21,12 @@ use({
 })
 ```
 
+If you're using [nvim-rooter](https://github.com/notjedi/nvim-rooter.lua), add:
+```lua
+require("nvim-rooter").setup({ manual = true })
+```
+It's functionality can be implemented [here](#Project-root-with-nvim-rooter).
+
 # Configuration
 **root-switcher** comes with the following defaults:
 ```lua
@@ -78,6 +84,7 @@ end, { silent = true })
 ```
 
 # Recipes
+## Project root with nvim-rooter
 You can set the project root with [nvim-rooter](https://github.com/notjedi/nvim-rooter.lua):
 ```lua
 use({
