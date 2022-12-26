@@ -51,6 +51,15 @@ function M.project_mode()
   M.apply_mode()
 end
 
+function M.toggle()
+  if Mode == PROJECT then
+    Mode = FILE
+  else -- Mode == FILE then
+    Mode = PROJECT
+  end
+  M.apply_mode()
+end
+
 function M.apply_mode(options)
   -- defaults options
   local defaults = { notify = true, warn = true }
@@ -65,25 +74,22 @@ function M.apply_mode(options)
   end
 
   -- cd to directory for given mode
-  if Mode == PROJECT then
-    vim.api.nvim_set_current_dir(ProjectRoot)
-  else -- Mode == FILE then
-    vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
-  end
+  xpcall(function()
+    if Mode == PROJECT then
+      vim.api.nvim_set_current_dir(ProjectRoot)
+    else -- Mode == FILE then
+      vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
+    end
+  end, function(err)
+    if options.notify then
+      vim.notify("Failed to apply root-switcher mode: " .. err, vim.log.levels.ERROR)
+    end
+  end)
 
   -- optionally notify
   if options.notify then
     vim.notify(vim.fn.getcwd() .. " (cwd = " .. (Mode == FILE and "file" or "project") .. ")", vim.log.levels.INFO)
   end
-end
-
-function M.toggle()
-  if Mode == PROJECT then
-    Mode = FILE
-  else -- Mode == FILE then
-    Mode = PROJECT
-  end
-  M.apply_mode()
 end
 
 return M
